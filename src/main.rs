@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 //-- ##################################
-//-- Task: Channels in Rust 
+//-- Task: Thread Safe Mutable access 
 //-- Author: Wesley Lewis
 //-- Version: 1.0.0
 //-- Date: 19 March 17
@@ -9,10 +9,29 @@
 
 use std::thread;
 use std::thread::JoinHandle;
+use std::sync::Arc;
+use std::time::Duration;
+use std::sync::Mutex;
 use std::sync::mpsc::{Sender, Receiver};
 use std::sync::mpsc;
 
 fn main() {
+    let data = Arc::new(Mutex::new(vec![1,2,3,4]));
+    for i in 0..10 {
+        let data = data.clone();
+        thread::spawn(move || {
+            let mut data = data.lock().unwrap();
+            data[0] += i;
+            println!("Thread id: {:?}", i);
+            println!("Data value: {:?}", data[0]);
+        });
+
+    }
+
+    thread::sleep(Duration::from_millis(10));
+}
+
+fn channels() {
     let threads = 10;
     let mut thread_holder = vec![];
     let (tx, rx): (Sender<i32>, Receiver<i32>) = mpsc::channel();
@@ -25,11 +44,11 @@ fn main() {
             println!("thread {} finished", thread_no);
         });
     }
-    
+
     for _i in 0..threads {
         thread_holder.push(rx.recv());
     }
-    
+
 
     println!("{:?}", thread_holder);
 }
