@@ -9,13 +9,12 @@
 //-- #################################
 //
 
-macro_rules! Wesley_Lewis {
-    () => {
-        println!("Rust macros are cool");
-    }    
+macro_rules! Check_Val {
+    (x => $e:expr) => (println!("mode x: {}", $e));
+    (y => $e:expr) => (println!("mode y: {}", $e));
 }
 
 fn main() {
-    Wesley_Lewis!() ;
+    Check_Val!(y => "wesley");
 }
 
