@@ -2,19 +2,19 @@
 #![allow(unused_variables)]
 
 //-- ##################################
-//-- Task: Building my first macro
+//-- Task: Implementing common macros in Rust
 //-- Author: Wesley Lewis
 //-- Version: 1.0.0
 //-- Date: 19 March 17
 //-- #################################
 //
 
-macro_rules! Check_Val {
-    (x => $e:expr) => (println!("mode x: {}", $e));
-    (y => $e:expr) => (println!("mode y: {}", $e));
-}
 
 fn main() {
-    Check_Val!(y => "wesley");
+    let v = vec![1,2,3,4,5];
+    println!("Vector: {:?}", v);
+
+    assert!(true);
+    assert_eq!(5, 3 + 2);
 }
 
