@@ -1,6 +1,8 @@
 #![allow(dead_code)]
+#![allow(unused_variables)]
+
 //-- ##################################
-//-- Task: Creating child processes 
+//-- Task: Waiting for a child process
 //-- Author: Wesley Lewis
 //-- Version: 1.0.0
 //-- Date: 19 March 17
@@ -17,6 +19,14 @@ use std::sync::mpsc;
 use std::process::Command;
 
 fn main() {
+    let mut child = Command::new("sleep").arg("5").spawn().unwrap();  
+    let _result = child.wait().unwrap();
+
+    print!("status if child process {} \n", _result);
+    println!("reached end of main");
+}
+
+fn creating_child_process() {
     let output = Command::new("rustc")
         .arg("--version")
         .output().unwrap_or_else(|e| {
