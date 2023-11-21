@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 //-- ##################################
-//-- Task: Thread Safe Mutable access 
+//-- Task: Creating child processes 
 //-- Author: Wesley Lewis
 //-- Version: 1.0.0
 //-- Date: 19 March 17
@@ -14,8 +14,27 @@ use std::time::Duration;
 use std::sync::Mutex;
 use std::sync::mpsc::{Sender, Receiver};
 use std::sync::mpsc;
+use std::process::Command;
 
 fn main() {
+    let output = Command::new("rustc")
+        .arg("--version")
+        .output().unwrap_or_else(|e| {
+            panic!("Failed to execute process: {}", e)
+        });
+
+    if output.status.success() {
+        let s = String::from_utf8_lossy(&output.stdout);
+
+        println!("rustc succeeded and stdout was:n{}", s);
+    }else {
+        let s = String::from_utf8_lossy(&output.stderr);
+
+        print!("rust falied and stderr was:n{}", s);
+    }
+}
+
+fn safe_mut_access() {
     let data = Arc::new(Mutex::new(vec![1,2,3,4]));
     for i in 0..10 {
         let data = data.clone();
@@ -97,3 +116,4 @@ fn code1() {
     }
 }
 
+// pg 127
