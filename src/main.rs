@@ -2,32 +2,56 @@
 #![allow(unused_variables)]
 
 //-- ##################################
-//-- Task: Implementing aliases
+//-- Task: Handling multiple errors 
 //-- Author: Wesley Lewis
 //-- Version: 1.0.0
 //-- Date: 19 March 17
 //-- #################################
 //
 
-use std::num::ParseIntError;
 
-type AliasedResult<T> = Result<T, ParseIntError>;
+type Result<T> = std::result::Result<T, String>;
 
-fn double_number(number_str: &str) -> AliasedResult<i32> {
-    number_str.parse::<i32>().map(|n| 2 * n)
+fn double_first(vec: Vec<&str>) -> Result<i32> {
+    vec.first()
+        .ok_or("Please use a vector with atleast one element".to_owned())
+        .and_then(|s| s.parse::<i32>()
+            .map_err(|e| e.to_string())
+            .map(|i| 2 * i))
 }
 
-fn print(result: AliasedResult<i32>) {
+fn print(result: Result<i32>) {
     match result {
-        Ok(n) => println!("n is {}", n),
+        Ok(n) => println!("The first double is {}", n),
         Err(e) => println!("Error: {}", e),
     }
 }
 
 fn main() {
-    print(double_number("10"));
-    print(double_number("tt"))
+    let empty = vec![];
+    let strings = vec!["tofu", "93", "18"];
+    print(double_first(empty));
+    print(double_first(strings));
 }
+
+// type AliasedResult<T> = Result<T, ParseIntError>;
+//
+// fn aliases() {
+//     print(double_number("10"));
+//     print(double_number("tt"));
+// }
+//
+// fn double_number(number_str: &str) -> AliasedResult<i32> {
+//     number_str.parse::<i32>().map(|n| 2 * n)
+// }
+//
+// fn print(result: AliasedResult<i32>) {
+//     match result {
+//         Ok(n) => println!("n is {}", n),
+//         Err(e) => println!("Error: {}", e),
+//     }
+// }
+
 
 // fn impl_map_for_result() {
 //     let twenty = double_number("10");
