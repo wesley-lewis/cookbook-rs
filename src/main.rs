@@ -2,38 +2,23 @@
 #![allow(unused_variables)]
 
 //-- ##################################
-//-- Task: Implementing designators
+//-- Task: Routing using nickel
 //-- Author: Wesley Lewis
 //-- Version: 1.0.0
 //-- Date: 19 March 17
 //-- #################################
 //
-
-macro_rules! create_function {
-    ($func_name:ident) => (
-        fn $func_name() {
-        println!("You called {:?}()", stringify!($func_name))
-    }
-    )
-}
-
-macro_rules! print_result {
-    ($expression:expr) => (
-    println!("{:?} = {:?}", stringify!($expression),$expression)
-    )
-}
+#[macro_use] extern crate nickel;
+use nickel::{Nickel, HttpRouter};
 
 fn main() {
-    foo();
-    bar();
-
-    print_result!(1u32 + 1);
-
-    print_result!({
-        let x = 1u32;
-        x * x + 2 * x - 1
+    let mut server = Nickel::new();
+    server.get("/user/:userid", middleware! {
+        |request| format!("This is user: {:?}", request.param("userid"))
     });
-}
+    server.get("/bar", middleware!("This is the /bar handler"));
+    server.get("/a/*/d", middleware!("This matches a/b/d and also a/b/c/d"));
+    server.get("/a/**/d", middleware! ("this matches /a/b/d and also /a/b/c/d"));
 
-create_function!(foo);
-create_function!(bar);
+    let _ = server.listen("127.0.0.1:3000");
+}
