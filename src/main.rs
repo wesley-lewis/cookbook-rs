@@ -2,7 +2,7 @@
 #![allow(unused_variables)]
 
 //-- ##################################
-//-- Task: Implementing map for Result
+//-- Task: Implementing aliases
 //-- Author: Wesley Lewis
 //-- Version: 1.0.0
 //-- Date: 19 March 17
@@ -11,31 +11,48 @@
 
 use std::num::ParseIntError;
 
-fn double_number(number_str: &str) -> Result<i32, ParseIntError> {
-    match number_str.parse::<i32>() {
-        Ok(n) => Ok(2 * n),
-        Err(e) => Err(e),
-    }
+type AliasedResult<T> = Result<T, ParseIntError>;
+
+fn double_number(number_str: &str) -> AliasedResult<i32> {
+    number_str.parse::<i32>().map(|n| 2 * n)
 }
 
-fn double_number_map(number_str: &str) -> Result<i32, ParseIntError> {
-    number_str.parse::<i32>().map(|n: i32| 2 * n)
-}
-
-fn print(result: Result<i32, ParseIntError>) {
+fn print(result: AliasedResult<i32>) {
     match result {
-        Ok(n) =>println!("n is {}", n),
+        Ok(n) => println!("n is {}", n),
         Err(e) => println!("Error: {}", e),
     }
 }
 
 fn main() {
-    let twenty = double_number("10");
-    print(twenty);
-
-    let tt = double_number_map("t");
-    print(tt);
+    print(double_number("10"));
+    print(double_number("tt"))
 }
+
+// fn impl_map_for_result() {
+//     let twenty = double_number("10");
+//     print(twenty);
+//
+//     let tt = double_number_map("t");
+//     print(tt);
+// }
+// fn double_number(number_str: &str) -> Result<i32, ParseIntError> {
+//     match number_str.parse::<i32>() {
+//         Ok(n) => Ok(2 * n),
+//         Err(e) => Err(e),
+//     }
+// }
+//
+// fn double_number_map(number_str: &str) -> Result<i32, ParseIntError> {
+//     number_str.parse::<i32>().map(|n: i32| 2 * n)
+// }
+//
+// fn print(result: Result<i32, ParseIntError>) {
+//     match result {
+//         Ok(n) =>println!("n is {}", n),
+//         Err(e) => println!("Error: {}", e),
+//     }
+// }
 
 fn impl_and_then() {
     let (cordon_blue, steak, sushi) = (Food::CordonBlue, Food::Steak, Food::Sushi);
