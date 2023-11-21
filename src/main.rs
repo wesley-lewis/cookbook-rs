@@ -2,22 +2,23 @@
 #![allow(unused_variables)]
 
 //-- ##################################
-//-- Task: Handling multiple errors 
+//-- Task: Implementing try! 
 //-- Author: Wesley Lewis
 //-- Version: 1.0.0
 //-- Date: 19 March 17
 //-- #################################
 //
 
-
 type Result<T> = std::result::Result<T, String>;
 
 fn double_first(vec: Vec<&str>) -> Result<i32> {
-    vec.first()
-        .ok_or("Please use a vector with atleast one element".to_owned())
-        .and_then(|s| s.parse::<i32>()
-            .map_err(|e| e.to_string())
-            .map(|i| 2 * i))
+    let first = r#try!(vec.first()
+        .ok_or("please use a vec with atleast one element".to_owned()));
+
+    let value = r#try!(first.parse::<i32>()
+        .map_err(|e| e.to_string()));
+
+    Ok(2 * value)
 }
 
 fn print(result: Result<i32>) {
@@ -29,10 +30,34 @@ fn print(result: Result<i32>) {
 
 fn main() {
     let empty = vec![];
-    let strings = vec!["tofu", "93", "18"];
+    let strings = vec!["tofu", "93"];
+
     print(double_first(empty));
     print(double_first(strings));
 }
+//
+// fn multiple_errors() {
+//     let empty = vec![];
+//     let strings = vec!["tofu", "93", "18"];
+//     print(double_first(empty));
+//     print(double_first(strings));
+// }
+// type Result<T> = std::result::Result<T, String>;
+//
+// fn double_first(vec: Vec<&str>) -> Result<i32> {
+//     vec.first()
+//         .ok_or("Please use a vector with atleast one element".to_owned())
+//         .and_then(|s| s.parse::<i32>()
+//             .map_err(|e| e.to_string())
+//             .map(|i| 2 * i))
+// }
+//
+// fn print(result: Result<i32>) {
+//     match result {
+//         Ok(n) => println!("The first double is {}", n),
+//         Err(e) => println!("Error: {}", e),
+//     }
+// }
 
 // type AliasedResult<T> = Result<T, ParseIntError>;
 //
