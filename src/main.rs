@@ -10,6 +10,30 @@
 //
 
 fn main() {
+    compare_stmt_match(Some("Another Book")); 
+    compare_stmt_match(Some("Rust Cookbook")); 
+
+    compare_stmt_unwrap(Some("Rust Cookbook"));
+    compare_stmt_unwrap(Some("Another Book"));
+}
+
+fn compare_stmt_match(input: Option<&str>) {
+    match input {
+        Some("Rust Cookbook") => println!("Rust cookbook was selected"),
+        Some(inner) => println!("Rust cookbook was not selected"),
+        None => println!("No input provided"),
+    }
+}
+
+fn compare_stmt_unwrap(input: Option<&str>) {
+    let inside_val = input.unwrap();
+    if inside_val == "Another Book" {
+        panic!("Rust Cookbook is not selected");
+    }
+    println!("I love {}s!!", inside_val);
+}
+
+fn panic_example() {
     compare_stmt("Rust Cookbook");
     compare_stmt("Another book");
 }
