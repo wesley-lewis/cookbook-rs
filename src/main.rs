@@ -2,15 +2,90 @@
 #![allow(unused_variables)]
 
 //-- ##################################
-//-- Task: Implementing map 
+//-- Task: Implementing map for Result
 //-- Author: Wesley Lewis
 //-- Version: 1.0.0
 //-- Date: 19 March 17
 //-- #################################
 //
 
+use std::num::ParseIntError;
+
+fn double_number(number_str: &str) -> Result<i32, ParseIntError> {
+    match number_str.parse::<i32>() {
+        Ok(n) => Ok(2 * n),
+        Err(e) => Err(e),
+    }
+}
+
+fn double_number_map(number_str: &str) -> Result<i32, ParseIntError> {
+    number_str.parse::<i32>().map(|n| 2 * n)
+}
+
+fn print(result: Result<i32, ParseIntError) {
+    match result {
+        
+    }
+}
+
+fn main() {
+     
+}
+
+fn impl_and_then() {
+    let (cordon_blue, steak, sushi) = (Food::CordonBlue, Food::Steak, Food::Sushi);
+
+    eat(cordon_blue, Day::Monday);
+    eat(steak, Day::Tuesday);
+    eat(sushi, Day::Wednesday);
+}
 #[derive(Debug)]
-enum Food { Apple, Carrot, Potato }
+enum Food { CordonBlue, Steak, Sushi }
+
+#[derive(Debug)]
+enum Day { Monday, Tuesday, Wednesday }
+
+fn have_ingredients(food: Food) -> Option<Food> {
+    match food {
+        Food::Sushi => None,
+        _ => Some(food),
+    }
+}
+
+fn have_recipe(food: Food) -> Option<Food> {
+    match food {
+        Food::CordonBlue => None,
+        _ => Some(food),
+    }
+}
+
+fn cookable(food: Food) -> Option<Food> {
+    have_ingredients(food).and_then(have_recipe)
+}
+
+fn eat(food: Food, day: Day) {
+    match cookable(food) {
+        Some(food) => println!("Yay! on {:?} we get to eat {:?}.", day, food),
+        None => println!("Oh no. We don't get to eat on {:?}?", day),
+    }
+}
+
+// fn implimented_map() {
+//     let apple = Some(Food::Apple);
+//     let carrot = Some(Food::Carrot);
+//     let potato = None;
+//
+//     let cooked_apple = cook(chop(peel(apple)));
+//     let cooked_carrot = cook(chop(peel(carrot)));
+//     let cooked_potato = process(potato);
+//
+//     eat(cooked_apple);
+//     eat(cooked_carrot);
+//     eat(cooked_potato);
+// }
+
+// #[derive(Debug)]
+// enum Food { Apple, Carrot, Potato }
 
 #[derive(Debug)] 
 struct Peeled(Food);
@@ -20,22 +95,6 @@ struct Chopped(Food);
 
 #[derive(Debug)] 
 struct Cooked(Food);
-
-
-fn main() {
-    let apple = Some(Food::Apple);
-    let carrot = Some(Food::Carrot);
-    let potato = None;
-
-    let cooked_apple = cook(chop(peel(apple)));
-    let cooked_carrot = cook(chop(peel(carrot)));
-    let cooked_potato = process(potato);
-
-    eat(cooked_apple);
-    eat(cooked_carrot);
-    eat(cooked_potato);
-}
-
 fn peel(food: Option<Food>) -> Option<Peeled> {
     match food {
         Some(food) => Some(Peeled(food)),
@@ -60,12 +119,12 @@ fn process(food: Option<Food>) -> Option<Cooked> {
         .map(|Chopped(f)| Cooked(f))
 }
 
-fn eat(food: Option<Cooked>) {
-    match food {
-        Some(food) => println!("Mmm. I love {:?}", food),
-        None => println!("Oh no! It wasn't edible.")
-    }
-}
+// fn eat(food: Option<Cooked>) {
+//     match food {
+//         Some(food) => println!("Mmm. I love {:?}", food),
+//         None => println!("Oh no! It wasn't edible.")
+//     }
+// }
 
 fn compare_stmt_match(input: Option<&str>) {
     match input {
