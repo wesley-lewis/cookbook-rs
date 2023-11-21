@@ -2,7 +2,7 @@
 #![allow(unused_variables)]
 
 //-- ##################################
-//-- Task: Waiting for a child process
+//-- Task: Making sequential code parallel 
 //-- Author: Wesley Lewis
 //-- Version: 1.0.0
 //-- Date: 19 March 17
@@ -18,7 +18,23 @@ use std::sync::mpsc::{Sender, Receiver};
 use std::sync::mpsc;
 use std::process::Command;
 
+extern crate rayon;
+use rayon::prelude::*;
+
 fn main() {
+    let rand_value = 10;
+    let sum_sq = sum_of_squares(&[rand_value]);
+
+    println!("Sum of squares of {0} is {1}", rand_value, sum_sq);
+}
+
+fn sum_of_squares(input: &[i32]) -> i32 {
+    input.par_iter()
+        .map(|&i| i * i)
+        .sum()
+}
+
+fn waiting_for_child_process() {
     let mut child = Command::new("sleep").arg("5").spawn().unwrap();  
     let _result = child.wait().unwrap();
 
